@@ -9,16 +9,19 @@ if torch.cuda.is_available():
     T = 1024
     step_num = 50
     learning_rate = 1e-3
+    device = "cuda"
 else:
     B = 8
     T = 64
     step_num = 10
     learning_rate = 1e-5
+    device = "cpu"
 
-print(f"cuda enabled: {torch.cuda.is_available()}")
+print(f"device: {device}")
 
 config = GPTConfig(context_size=T)
 model = GPT(config)
+model.to(device)
 
 data_loader = DataLoaderLite(B, T)
 
@@ -38,6 +41,7 @@ def report(func):
 def step(i):
     optimizer.zero_grad()
     x, y = data_loader.next_batch()
+    x, y = x.to(device), y.to(device)
     logits, loss = model(x, y)
     loss.backward()
     optimizer.step()
@@ -46,6 +50,8 @@ def step(i):
 losses = []
 for i in range(step_num):
     loss = step(i)
+    if device == 'cuda':
+        loss = loss.cpu()
     losses.append(loss.detach().numpy())
 
 plt.plot(losses)

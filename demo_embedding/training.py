@@ -1,32 +1,52 @@
 from demo_embedding.model import GPT, GPTConfig
 from demo_embedding.data_loader import DataLoaderLite
 import torch
+import time
 import matplotlib.pyplot as plt
 
-B = 16
-T = 1024
-step_num = 50
+if torch.cuda.is_available():
+    B = 16
+    T = 1024
+    step_num = 50
+    learning_rate = 1e-3
+else:
+    B = 8
+    T = 64
+    step_num = 10
+    learning_rate = 1e-5
+
+print(f"cuda enabled: {torch.cuda.is_available()}")
 
 config = GPTConfig(context_size=T)
 model = GPT(config)
 
 data_loader = DataLoaderLite(B, T)
 
-optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3)
+optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
+
+def report(func):
+    def wrapper(i, *args, **kwargs):
+        start_time = time.time()
+        loss = func(i, *args, **kwargs)
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+        print(f"step: {i} | loss: {loss:.4f} | elapsed: {elapsed_time*1000:.1f} msec")
+        return loss
+    return wrapper
+
+@report
+def step(i):
+    optimizer.zero_grad()
+    x, y = data_loader.next_batch()
+    logits, loss = model(x, y)
+    loss.backward()
+    optimizer.step()
+    return loss
 
 losses = []
 for i in range(step_num):
-    optimizer.zero_grad()
-
-    x, y = data_loader.next_batch()
-    logits, loss = model(x, y)
-
-    loss.backward()
-    optimizer.step()
-
+    loss = step(i)
     losses.append(loss.detach().numpy())
-
-    print(f"step: {i} | loss: {loss}")
 
 plt.plot(losses)
 plt.show()

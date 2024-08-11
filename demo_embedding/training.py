@@ -3,11 +3,11 @@ from demo_embedding.data_loader import DataLoaderLite
 import torch
 import matplotlib.pyplot as plt
 
-B = 12
-T = 64
-step_num = 10
+B = 16
+T = 1024
+step_num = 50
 
-config = GPTConfig()
+config = GPTConfig(context_size=T)
 model = GPT(config)
 
 data_loader = DataLoaderLite(B, T)

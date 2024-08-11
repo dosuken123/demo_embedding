@@ -93,7 +93,6 @@ class GPT(nn.Module):
 
         pos = torch.arange(0, T, step=1, dtype=torch.long, device=inputs.device)
         pos_emb = self.positional_encoding(pos)
-        # print(f"inputs: {inputs}")
         tok_emb = self.token_to_embedding(inputs)
         x = tok_emb + pos_emb
 

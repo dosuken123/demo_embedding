@@ -14,7 +14,7 @@ class DataLoaderLite:
         self.tokens = torch.tensor(enc.encode(text))
 
         print(f"total tokens: {len(self.tokens)}")
-        print(f"1 epoch = {len(self.tokens) / (B * T):.2f} tokens")
+        print(f"total batches: {len(self.tokens) / (B * T):.2f}")
 
         self.current_position = 0
 

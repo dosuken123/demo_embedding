@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 if torch.cuda.is_available():
     B = 16
     T = 1024
-    step_num = 50
+    step_num = 19073
     learning_rate = 1e-3
     device = "cuda"
 else:

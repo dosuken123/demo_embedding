@@ -2,6 +2,7 @@ from demo_embedding.model import GPT, GPTConfig
 from demo_embedding.data_loader import DataLoaderLite
 import torch
 import time
+from datetime import datetime
 import matplotlib.pyplot as plt
 
 if torch.cuda.is_available():
@@ -27,6 +28,7 @@ data_loader = DataLoaderLite(B, T)
 
 optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
 
+
 def report(func):
     def wrapper(i, *args, **kwargs):
         start_time = time.time()
@@ -35,7 +37,9 @@ def report(func):
         elapsed_time = end_time - start_time
         print(f"step: {i} | loss: {loss:.4f} | elapsed: {elapsed_time*1000:.1f} msec")
         return loss
+
     return wrapper
+
 
 @report
 def step(i):
@@ -47,12 +51,15 @@ def step(i):
     optimizer.step()
     return loss
 
+
 losses = []
+print(f"started at: {datetime.now()}")
 for i in range(step_num):
     loss = step(i)
-    if device == 'cuda':
+    if device == "cuda":
         loss = loss.cpu()
     losses.append(loss.detach().numpy())
+print(f"finished at: {datetime.now()}")
 
 plt.plot(losses)
 plt.show()

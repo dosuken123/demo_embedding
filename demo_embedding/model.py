@@ -16,7 +16,9 @@ class SelfAttention(nn.Module):
     def __init__(self, config: GPTConfig):
         super().__init__()
         self.config = config
-        assert (config.embedding_dim % config.head_size) == 0, "Embedding dim must be dividble by head size."
+        assert (
+            config.embedding_dim % config.head_size
+        ) == 0, "Embedding dim must be dividble by head size."
 
         self.qkv_embedding = nn.Linear(config.embedding_dim, config.embedding_dim * 3)
         self.output = nn.Linear(config.embedding_dim, config.embedding_dim)

@@ -23,5 +23,4 @@ from transformers import AutoTokenizer, AutoModel
 # #         [0.6660, 1.0000, 0.1411],
 # #         [0.1046, 0.1411, 1.0000]])
 
-
 model = AutoModel.from_pretrained("sentence-transformers/all-MiniLM-L6-v2")

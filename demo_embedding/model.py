@@ -112,32 +112,3 @@ class GPT(nn.Module):
             )
 
         return logits, loss
-
-
-####
-
-# inputs = torch.randn(4, 12, 32, dtype=torch.float)
-# print(f"inputs: {inputs.size()}")
-# B, T, C = inputs.size()
-
-# ln = nn.Linear(32, 32 * 3)
-# qkv = ln(inputs)
-# print(f"qkv.size(): {qkv.size()} ")
-
-# q, k, v = qkv.split(32, dim=2)
-# print(f"q.size(): {q.size()}")
-# print(f"k.size(): {k.size()}")
-# print(f"v.size(): {v.size()}")
-# print(f"q: {q[:1,:1,:10]}")
-# print(f"k: {k[:1,:1,:10]}")
-# print(f"v: {v[:1,:1,:10]}")
-
-# config = GPTConfig()
-# model = GPT(config)
-
-# x = torch.randint(0, 50257, (4, 12), dtype=torch.long)
-# y = torch.randint(0, 50257, (4, 12), dtype=torch.long)
-# # print(x)
-# logits, loss = model(x, y)
-# print(f"logits: {logits}")
-# print(f"loss: {loss}")

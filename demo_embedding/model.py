@@ -25,18 +25,14 @@ class SelfAttention(nn.Module):
 
     def forward(self, x):
         B, T, C = x.size()
+        embedding_dim = self.config.embedding_dim
+        head_size = self.config.head_size
 
         qkv = self.qkv_embedding(x)
-        q, k, v = qkv.split(self.config.embedding_dim, dim=2)
-        q = q.view(B, T, self.config.head_size, C // self.config.head_size).transpose(
-            1, 2
-        )
-        k = k.view(B, T, self.config.head_size, C // self.config.head_size).transpose(
-            1, 2
-        )
-        v = v.view(B, T, self.config.head_size, C // self.config.head_size).transpose(
-            1, 2
-        )
+        q, k, v = qkv.split(embedding_dim, dim=2)
+        q = q.view(B, T, head_size, C // head_size).transpose(1, 2)
+        k = k.view(B, T, head_size, C // head_size).transpose(1, 2)
+        v = v.view(B, T, head_size, C // head_size).transpose(1, 2)
         out = torch.nn.functional.scaled_dot_product_attention(q, k, v, is_causal=True)
         out = out.transpose(1, 2).contiguous().view(B, T, C)
         out = self.output(out)

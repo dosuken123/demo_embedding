@@ -1,7 +1,7 @@
 import torch
 from transformers import GPT2Tokenizer
 
-tokenizer = GPT2Tokenizer.from_pretrained('openai-community/gpt2')
+tokenizer = GPT2Tokenizer.from_pretrained("openai-community/gpt2")
 print(f"vocab_size: {tokenizer.vocab_size}")
 
 model = torch.nn.Sequential(
@@ -20,7 +20,9 @@ print(f"y: {y}")
 logits = model(x)
 print(f"logits: {logits.shape}")
 
-loss = torch.nn.functional.cross_entropy(logits.view(-1, tokenizer.vocab_size), y.view(-1))
+loss = torch.nn.functional.cross_entropy(
+    logits.view(-1, tokenizer.vocab_size), y.view(-1)
+)
 
 print(f"token_ids: {token_ids}")
 print(f"logits: {logits}")
@@ -44,11 +46,15 @@ for step in range(1000):
         banana_x = torch.tensor(banana_token_ids[:-1])[None, :]
         logits = model(banana_x)
         banana_y = torch.tensor(banana_token_ids[1:])[None, :]
-        loss = torch.nn.functional.cross_entropy(logits.view(-1, tokenizer.vocab_size), banana_y.view(-1))
+        loss = torch.nn.functional.cross_entropy(
+            logits.view(-1, tokenizer.vocab_size), banana_y.view(-1)
+        )
     else:
         logits = model(x)
-        loss = torch.nn.functional.cross_entropy(logits.view(-1, tokenizer.vocab_size), y.view(-1))
-    
+        loss = torch.nn.functional.cross_entropy(
+            logits.view(-1, tokenizer.vocab_size), y.view(-1)
+        )
+
     loss.backward()
     optimizer.step()
 
@@ -56,5 +62,3 @@ for step in range(1000):
     pred_token_id = torch.multinomial(prob, num_samples=1)
     pred_output = tokenizer.decode(token_ids[:-1] + pred_token_id.detach().tolist()[0])
     print(f"step: {step} | loss: {loss:.2f} | {pred_output}")
-
-

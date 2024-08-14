@@ -8,13 +8,16 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score
 
-df = pd.read_csv('demo_embedding/examples/clean.csv')
+df = pd.read_csv("demo_embedding/examples/clean.csv")
 print(df.head())
 
-X = df.drop('gdp', axis=1).values
-y = df['gdp'].values
+X = df.drop("gdp", axis=1).values
+y = df["gdp"].values
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
 
 class factbook_data:
     def __init__(self, X, y, scale_data=True):
@@ -26,28 +29,29 @@ class factbook_data:
 
     def __len__(self):
         return len(self.X)
-    
+
     def __getitem__(self, idx):
         return self.X[idx], self.y[idx]
+
 
 class MLP(nn.Module):
     def __init__(self):
         super().__init__()
         self.layers = nn.Sequential(
-            nn.Linear(5, 64),
-            nn.ReLU(),
-            nn.Linear(64, 32),
-            nn.ReLU(),
-            nn.Linear(32, 1)
+            nn.Linear(5, 64), nn.ReLU(), nn.Linear(64, 32), nn.ReLU(), nn.Linear(32, 1)
         )
 
     def forward(self, x):
         return self.layers(x)
-    
+
 
 dataset = factbook_data(X_train, y_train, scale_data=False)
-trainloader = torch.utils.data.DataLoader(dataset, batch_size=10, shuffle=True, num_workers=0)
-testloader = torch.utils.data.DataLoader(dataset, batch_size=10, shuffle=True, num_workers=0)
+trainloader = torch.utils.data.DataLoader(
+    dataset, batch_size=10, shuffle=True, num_workers=0
+)
+testloader = torch.utils.data.DataLoader(
+    dataset, batch_size=10, shuffle=True, num_workers=0
+)
 
 mlp = MLP()
 loss_function = nn.L1Loss()
@@ -67,7 +71,7 @@ for epoch in range(5):
         optimizer.step()
 
         print(f"epoch: {epoch} | step: {i:2d} | loss: {loss}")
-        
+
 test_data = torch.from_numpy(X_test).float()
 test_targets = torch.from_numpy(y_test).float()
 

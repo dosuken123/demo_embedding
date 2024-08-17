@@ -15,7 +15,12 @@ matplotlib = "^3.9.1.post1"
 transformers = "^4.44.0"
 sentence-transformers = "^3.0.1"
 pandas = "^2.2.2"
+datasets = {extras = ["vision"], version = "^2.21.0"}
+torchvision = "^0.19.0"
 
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.5"
 
 [build-system]
 requires = ["poetry-core"]

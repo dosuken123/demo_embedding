@@ -8,6 +8,11 @@ poetry run python -m demo_embedding.training
 
 Colab: https://colab.research.google.com/drive/1IUrbHn6v5F7-t9pL19VegJSx-GjqBESp?usp=sharing
 
+## Feature extractions
+
+- transformers/models/distilbert/modeling_distilbert.py - `last_hidden_state`
+- https://blog.min.io/feature-extraction-with-large-language-models-hugging-face-and-minio/
+
 ## Links
 
 - https://www.youtube.com/watch?v=l8pRSuU81PU&ab_channel=AndrejKarpathy
